@@ -12,8 +12,6 @@ const cities = pgTable('cities', {
   id: serial('id').primaryKey().notNull(),
   name: varchar('name', { length: 100 }).notNull(),
   state: varchar('state', { length: 100 }),
-  lat: varchar('lat', { length: 100 }).notNull(),
-  lng: varchar('lng', { length: 100 }).notNull(),
   slug: varchar('slug', { length: 100 }).notNull(),
   createdAt: timestamp('created_at')
     .notNull()
