@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 
-const industries = pgTable('entreprise_types', {
+const industries = pgTable('industries', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull().unique(),
   icon: varchar('icon', { length: 255 }),
