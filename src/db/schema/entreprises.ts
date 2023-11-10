@@ -5,7 +5,7 @@ import entrepriseTypes from './entreprise_types';
 import cities from './cities';
 import countries from './countries';
 import { employeesNumber } from './enum';
-import industries from './industries';
+import sectors from './sectors';
 
 const entreprises = pgTable('entreprises', {
   id: serial('id').primaryKey(),
@@ -22,13 +22,13 @@ const entreprises = pgTable('entreprises', {
   zipCode: varchar('zip_code', { length: 255 }),
   cityId: integer('city_id').references(() => cities.id),
   countryId: integer('country_id').references(() => countries.id),
-  phone: varchar('phone', { length: 100 }),
+  phoneNumber: varchar('phone_number', { length: 100 }),
   email: varchar('email', { length: 100 }),
   facebook: varchar('facebook', { length: 255 }),
   twitter: varchar('twitter', { length: 255 }),
   linkedin: varchar('linkedin', { length: 255 }),
   website: varchar('website', { length: 255 }),
   employeesNumber: employeesNumber('employees_number'),
-  industryId: integer('industry_id').references(() => industries.id),
+  sectorId: integer('sector_id').references(() => sectors.id),
 });
 export default entreprises;

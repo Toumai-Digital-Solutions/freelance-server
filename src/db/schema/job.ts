@@ -9,22 +9,26 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { experienceLevel, jobType, status } from './enum';
+import { experienceLevel, status } from './enum';
 import users from './users';
 import countries from './countries';
 import cities from './cities';
+import entreprises from './entreprises';
+import jobTypes from './job_type';
+import currencies from './currencies';
 
 const jobs = pgTable('jobs', {
   id: serial('id').primaryKey().notNull(),
   userId: integer('user_id')
     .references(() => users.id)
     .notNull(),
+  entrepise_id: integer('entreprise_id').references(() => entreprises.id),
   title: varchar('title', { length: 255 }).notNull(),
   description: text('description'),
-  jobType: jobType('job_type'),
+
+  jobTypeId: integer('job_type_id').references(() => jobTypes.id),
   salary: doublePrecision('salary'),
-  salaryCurrency: integer('salary_currency'),
-  tags: varchar('tags', { length: 255 }).array(),
+  currencyId: integer('currency_id').references(() => currencies.id),
   countryId: integer('country_id').references(() => countries.id),
   cityId: integer('city_id').references(() => cities.id),
   status: status('status').notNull().default('active'),

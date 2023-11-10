@@ -1,13 +1,13 @@
 import { sql } from 'drizzle-orm';
-import { serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { serial, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 
-const industries = pgTable('industries', {
+const tags = pgTable('tags', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull().unique(),
-  icon: varchar('icon', { length: 255 }),
   createdAt: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
 });
-export default industries;
+
+export default tags;
