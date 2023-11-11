@@ -1,7 +1,7 @@
 import { Body, Controller, HttpException, Inject, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginEmailPasswordDto, RegisterEmailPasswordDto } from './auth.dto';
+import { LoginCredPasswordDto, RegisterEmailPasswordDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { sql } from 'drizzle-orm';
 
@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('login')
   async loginWithEmailPassword(
-    @Body() userDto: LoginEmailPasswordDto,
+    @Body() userDto: LoginCredPasswordDto,
     @Headers('ip') ip?: string,
     @Headers('mac') mac?: string,
     @Headers('browser') browser?: string,
@@ -49,10 +49,7 @@ export class AuthController {
     // }
 
     notFoundParams(userDto);
-    const user = await this.authService.loginWithEmailRole({
-      role: userDto.role,
-      email: userDto.email,
-    });
+    const user = await this.authService.loginWithEmailOrUsername(userDto.cred);
 
     if (!user) throw new HttpException('User is not found', 400);
     const samePwd = await bcrypt.compare(userDto.password, user.password);

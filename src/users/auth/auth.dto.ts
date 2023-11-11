@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from 'src/db/schema/enum';
 
-export class LoginEmailPasswordDto {
+export class LoginCredPasswordDto {
   @ApiProperty()
-  email: string;
+  cred: string;
   @ApiProperty()
   password: string;
-  @ApiProperty()
-  role: UserRole;
 }
 
 export class RegisterEmailPasswordDto {

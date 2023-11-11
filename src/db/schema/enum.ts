@@ -37,16 +37,6 @@ export const employeesNumber = pgEnum('employees_number', [
   '10000+',
 ]);
 
-export const jobType = pgEnum('job_type', [
-  'full_time',
-  'part_time',
-  'internship',
-  'freelance',
-  'contract',
-  'CDD',
-  'CDI',
-]);
-
 export const status = pgEnum('status', [
   'active',
   'inactive',

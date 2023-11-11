@@ -1,4 +1,4 @@
-import { InferSelectModel, sql } from 'drizzle-orm';
+import { InferInsertModel, InferSelectModel, sql } from 'drizzle-orm';
 import { serial, varchar, boolean } from 'drizzle-orm/pg-core';
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { genre, userRole, userStatus } from './enum';
@@ -11,7 +11,7 @@ const users = pgTable('users', {
   role: userRole('role').notNull(),
 
   email: varchar('email', { length: 255 }).notNull().unique(),
-  username: varchar('username', { length: 255 }).notNull().unique(),
+  username: varchar('username', { length: 255 }).unique(),
   firstName: varchar('first_name', { length: 255 }),
   lastName: varchar('last_name', { length: 255 }),
 
@@ -49,3 +49,4 @@ const users = pgTable('users', {
 export default users;
 
 export type User = InferSelectModel<typeof users>;
+export type UserInsert = InferInsertModel<typeof users>;
