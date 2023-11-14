@@ -57,7 +57,7 @@ export class UploadService {
     await this.s3.send(
       new PutObjectCommand({
         Bucket: this.bucket,
-        Key: key,
+        Key: `tds/${key}`,
         Body: file.buffer,
         ContentType: contentType || 'application/octet-stream',
         Metadata: metadata,

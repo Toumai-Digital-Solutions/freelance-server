@@ -5,6 +5,8 @@ import { DBModule } from './db/db.module';
 import { UsersModule } from './users/users.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
+import { EntreprisesModule } from './libs/features/entreprises/entreprises.module';
+import { JobsModule } from './libs/features/jobs/jobs.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     UploadModule,
     DBModule,
+    EntreprisesModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
