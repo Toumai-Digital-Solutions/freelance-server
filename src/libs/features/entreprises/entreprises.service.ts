@@ -4,7 +4,9 @@ import { UpdateEntrepriseDto } from './dto/update-entreprise.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB } from 'src/variables';
 import entreprises from 'src/db/schema/entreprises';
-import { eq } from 'drizzle-orm';
+import { desc, eq, ilike, or } from 'drizzle-orm';
+import jobs from 'src/db/schema/job';
+import { SearchEntrepriseDto } from './dto/search-entreprise.dto';
 
 @Injectable()
 export class EntreprisesService {
@@ -15,6 +17,22 @@ export class EntreprisesService {
 
   findAll() {
     return this.db.select().from(entreprises);
+  }
+  findAllBySearch(params: SearchEntrepriseDto) {
+    console.log('params', params);
+    const { q, limit = 20, orderBy = 'id', order = 'asc' } = params;
+    const orderBySql =
+      order === 'desc' ? desc(entreprises[orderBy]) : jobs[orderBy];
+
+    const query = q ? or(ilike(jobs.title, `%${q}%`)) : undefined;
+    const where = query;
+
+    return this.db
+      .select()
+      .from(entreprises)
+      .where(where)
+      .orderBy(orderBySql)
+      .limit(limit);
   }
 
   findOne(id: number) {

@@ -4,7 +4,8 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB } from 'src/variables';
 import jobs from 'src/db/schema/job';
-import { eq } from 'drizzle-orm';
+import { desc, eq, ilike, or } from 'drizzle-orm';
+import { SearchJobDto } from './dto/search-job.dto';
 
 @Injectable()
 export class JobsService {
@@ -15,6 +16,21 @@ export class JobsService {
 
   findAll() {
     return this.db.select().from(jobs);
+  }
+  findAllBySearch(params: SearchJobDto) {
+    console.log('params', params);
+    const { q, limit = 20, orderBy = 'id', order = 'asc' } = params;
+    const orderBySql = order === 'desc' ? desc(jobs[orderBy]) : jobs[orderBy];
+
+    const query = q ? or(ilike(jobs.title, `%${q}%`)) : undefined;
+    const where = query;
+
+    return this.db
+      .select()
+      .from(jobs)
+      .where(where)
+      .orderBy(orderBySql)
+      .limit(limit);
   }
 
   findOne(id: number) {
