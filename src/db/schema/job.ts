@@ -22,7 +22,7 @@ const jobs = pgTable('jobs', {
   userId: integer('user_id')
     .references(() => users.id)
     .notNull(),
-  entrepise_id: integer('entreprise_id').references(() => entreprises.id),
+  entrepriseId: integer('entreprise_id').references(() => entreprises.id),
   title: varchar('title', { length: 255 }).notNull(),
   description: text('description'),
 

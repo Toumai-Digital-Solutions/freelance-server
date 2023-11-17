@@ -4,8 +4,10 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB } from 'src/variables';
 import jobs from 'src/db/schema/job';
-import { desc, eq, ilike, or } from 'drizzle-orm';
+import { desc, eq, getTableColumns, ilike, or } from 'drizzle-orm';
 import { SearchJobDto } from './dto/search-job.dto';
+import entreprises from 'src/db/schema/entreprises';
+import users from 'src/db/schema/users';
 
 @Injectable()
 export class JobsService {
@@ -17,20 +19,40 @@ export class JobsService {
   findAll() {
     return this.db.select().from(jobs);
   }
-  findAllBySearch(params: SearchJobDto) {
+  async findAllBySearch(params: SearchJobDto) {
     console.log('params', params);
     const { q, limit = 20, orderBy = 'id', order = 'asc' } = params;
     const orderBySql = order === 'desc' ? desc(jobs[orderBy]) : jobs[orderBy];
 
     const query = q ? or(ilike(jobs.title, `%${q}%`)) : undefined;
     const where = query;
-
-    return this.db
-      .select()
+    const data = await this.db
+      .select({
+        ...getTableColumns(jobs),
+        entreprise: {
+          id: entreprises.id,
+          userId: entreprises.userId,
+          name: entreprises.name,
+          logo: entreprises.logo,
+        },
+        user: {
+          id: users.id,
+          email: users.email,
+          firstName: users.firstName,
+          lastName: users.lastName,
+          avatar: users.avatar,
+        },
+      })
       .from(jobs)
       .where(where)
+      .leftJoin(entreprises, eq(jobs.entrepriseId, entreprises.id))
+      .leftJoin(users, eq(jobs.userId, users.id))
       .orderBy(orderBySql)
       .limit(limit);
+
+    return {
+      data,
+    };
   }
 
   findOne(id: number) {
