@@ -3,6 +3,8 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 export class SearchJobDto {
   @ApiPropertyOptional({ description: 'Query for search' })
   q: string;
+  @ApiPropertyOptional({ description: 'last id' })
+  last?: number;
   @ApiPropertyOptional({ description: 'result number' })
   limit: number;
   @ApiPropertyOptional({ description: 'OrderBy' })
