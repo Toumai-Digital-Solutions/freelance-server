@@ -4,7 +4,7 @@ export class SearchJobDto {
   @ApiPropertyOptional({ description: 'Query for search' })
   q: string;
   @ApiPropertyOptional({ description: 'last id' })
-  last?: number;
+  offset?: number;
   @ApiPropertyOptional({ description: 'result number' })
   limit: number;
   @ApiPropertyOptional({ description: 'OrderBy' })
