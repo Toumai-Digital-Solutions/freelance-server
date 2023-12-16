@@ -7,10 +7,10 @@ const currencies = pgTable('currencies', {
   symbol: varchar('symbol', { length: 10 }).notNull(),
   code: varchar('code', { length: 10 }).notNull(),
   rate: varchar('rate', { length: 10 }).notNull(),
-  createdAt: timestamp('created_at')
+  created_at: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
-  updatedAt: timestamp('updated_at')
+  updated_at: timestamp('updated_at')
     .notNull()
     .default(sql`now()`),
 });

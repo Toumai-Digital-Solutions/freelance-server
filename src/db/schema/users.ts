@@ -12,24 +12,24 @@ const users = pgTable('users', {
 
   email: varchar('email', { length: 255 }).notNull().unique(),
   username: varchar('username', { length: 255 }).unique(),
-  firstName: varchar('first_name', { length: 255 }),
-  lastName: varchar('last_name', { length: 255 }),
+  first_name: varchar('first_name', { length: 255 }),
+  last_name: varchar('last_name', { length: 255 }),
 
   avatar: varchar('avatar', { length: 255 }),
   cover: varchar('cover', { length: 255 }),
   about: varchar('about', { length: 255 }),
-  phoneNumber: varchar('phone_number', { length: 255 }),
+  phone_number: varchar('phone_number', { length: 255 }),
   birthday: varchar('birthday', { length: 20 }),
   address: varchar('address', { length: 255 }),
-  zipCode: varchar('zip_code', { length: 255 }),
+  zip_code: varchar('zip_code', { length: 255 }),
 
   gender: genre('gender'),
   status: userStatus('status').notNull().default('active'),
   language: varchar('language', { length: 10 }).references(
     () => languages.code,
   ),
-  isEmailVerified: boolean('is_email_verified').notNull().default(false),
-  isPhoneNumberVerified: boolean('is_phone_number_verified')
+  is_email_verified: boolean('is_email_verified').notNull().default(false),
+  is_phone_number_verified: boolean('is_phone_number_verified')
     .notNull()
     .default(false),
   password: varchar('password', { length: 256 }),
@@ -37,13 +37,13 @@ const users = pgTable('users', {
   twitter: varchar('twitter', { length: 255 }),
   linkedin: varchar('linkedin', { length: 255 }),
   website: varchar('website', { length: 255 }),
-  cityId: integer('city_id').references(() => cities.id),
-  countryId: integer('country_id').references(() => countries.id),
+  city_id: integer('city_id').references(() => cities.id),
+  country_id: integer('country_id').references(() => countries.id),
 
-  registeredAt: timestamp('registered_at')
+  registered_at: timestamp('registered_at')
     .notNull()
     .default(sql`now()`),
-  lastLoginAt: timestamp('last_login_at').default(sql`now()`),
+  last_login_at: timestamp('last_login_at').default(sql`now()`),
 });
 
 export default users;

@@ -27,7 +27,7 @@ export class UploadService {
     const contentType = mime.lookup(file.originalname);
     const uuid = uuidv4();
     const metadata = {
-      userId: String(user.id),
+      user_id: String(user.id),
       username: user.username,
       email: user.email,
       role: user.role,
@@ -49,7 +49,7 @@ export class UploadService {
     Logger.verbose('Replace file :', key);
     const contentType = mime.lookup(file.originalname);
     const metadata = {
-      userId: String(user.id),
+      user_id: String(user.id),
       username: user.username,
       email: user.email,
       role: user.role,

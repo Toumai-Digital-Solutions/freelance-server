@@ -7,24 +7,24 @@ import specializations from './specialization';
 const jobToSpecializations = pgTable(
   'job_to_specializations',
   {
-    jobId: integer('job_id')
+    job_id: integer('job_id')
       .notNull()
       .references(() => jobs.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    specializationsId: integer('specializations_id')
+    specializations_id: integer('specializations_id')
       .notNull()
       .references(() => specializations.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    createdAt: timestamp('created_at')
+    created_at: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
   },
   (table) => ({
-    unique: unique().on(table.jobId, table.specializationsId),
+    unique: unique().on(table.job_id, table.specializations_id),
   }),
 );
 export default jobToSpecializations;

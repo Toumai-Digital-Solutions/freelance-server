@@ -15,15 +15,15 @@ const specializations = pgTable(
   {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 100 }).notNull(),
-    sectorId: integer('sector_id')
+    sector_id: integer('sector_id')
       .references(() => sectors.id)
       .notNull(),
-    createdAt: timestamp('created_at')
+    created_at: timestamp('created_at')
       .notNull()
       .default(sql`now()`),
   },
   (table) => ({
-    unique: unique().on(table.name, table.sectorId),
+    unique: unique().on(table.name, table.sector_id),
   }),
 );
 export default specializations;

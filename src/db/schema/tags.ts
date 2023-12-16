@@ -5,7 +5,7 @@ import { pgTable } from 'drizzle-orm/pg-core';
 const tags = pgTable('tags', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull().unique(),
-  createdAt: timestamp('created_at')
+  created_at: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
 });

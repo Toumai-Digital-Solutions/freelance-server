@@ -12,6 +12,9 @@ import cities from 'src/db/schema/cities';
 import countries from 'src/db/schema/countries';
 import jobTypes from 'src/db/schema/job_type';
 import currencies from 'src/db/schema/currencies';
+import { objArray } from 'src/utils/dbUtils';
+import specializations from 'src/db/schema/specialization';
+import jobToSpecializations from 'src/db/schema/job_to_specializations';
 
 @Injectable()
 export class JobsService {
@@ -36,22 +39,22 @@ export class JobsService {
         ...getTableColumns(jobs),
         entreprise: {
           id: entreprises.id,
-          userId: entreprises.userId,
+          user_id: entreprises.user_id,
           name: entreprises.name,
           logo: entreprises.logo,
         },
         user: {
           id: users.id,
           email: users.email,
-          firstName: users.firstName,
-          lastName: users.lastName,
+          first_name: users.first_name,
+          last_name: users.last_name,
           avatar: users.avatar,
         },
       })
       .from(jobs)
       .where(where)
-      .leftJoin(entreprises, eq(jobs.entrepriseId, entreprises.id))
-      .leftJoin(users, eq(jobs.userId, users.id))
+      .leftJoin(entreprises, eq(jobs.entreprise_id, entreprises.id))
+      .leftJoin(users, eq(jobs.user_id, users.id))
       .orderBy(orderBySql)
       .offset(offset)
       .limit(limit);
@@ -67,30 +70,49 @@ export class JobsService {
         ...getTableColumns(jobs),
         entreprise: {
           id: entreprises.id,
-          userId: entreprises.userId,
+          user_id: entreprises.user_id,
           name: entreprises.name,
           logo: entreprises.logo,
         },
         user: {
           id: users.id,
           email: users.email,
-          firstName: users.firstName,
-          lastName: users.lastName,
+          first_name: users.first_name,
+          last_name: users.last_name,
           avatar: users.avatar,
         },
         city: cities,
         country: countries,
-        jobType: jobTypes,
+        job_type: jobTypes,
         currency: currencies,
+        specializations: objArray({
+          table: specializations,
+          id: specializations.id,
+        }),
       })
       .from(jobs)
-      .leftJoin(entreprises, eq(jobs.entrepriseId, entreprises.id))
-      .leftJoin(users, eq(jobs.userId, users.id))
-      .leftJoin(cities, eq(jobs.cityId, cities.id))
-      .leftJoin(countries, eq(jobs.countryId, countries.id))
-      .leftJoin(jobTypes, eq(jobs.jobTypeId, jobTypes.id))
-      .leftJoin(currencies, eq(jobs.currencyId, currencies.id))
+      .leftJoin(entreprises, eq(jobs.entreprise_id, entreprises.id))
+      .leftJoin(users, eq(jobs.user_id, users.id))
+      .leftJoin(cities, eq(jobs.city_id, cities.id))
+      .leftJoin(countries, eq(jobs.country_id, countries.id))
+      .leftJoin(jobTypes, eq(jobs.job_type_id, jobTypes.id))
+      .leftJoin(currencies, eq(jobs.currency_id, currencies.id))
+      .leftJoin(jobToSpecializations, eq(jobs.id, jobToSpecializations.job_id))
+      .leftJoin(
+        specializations,
+        eq(jobToSpecializations.specializations_id, specializations.id),
+      )
       .where(eq(jobs.id, id))
+      .groupBy(() => [
+        jobs.id,
+        entreprises.id,
+        users.id,
+        cities.id,
+        countries.id,
+        jobTypes.id,
+        currencies.id,
+        specializations.id,
+      ])
       .then((res) => res[0]);
   }
 

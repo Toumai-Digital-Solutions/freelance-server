@@ -6,7 +6,7 @@ const sectors = pgTable('sectors', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull().unique(),
   icon: varchar('icon', { length: 255 }),
-  createdAt: timestamp('created_at')
+  created_at: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
 });

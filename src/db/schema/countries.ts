@@ -12,14 +12,14 @@ const countries = pgTable('countries', {
   id: serial('id').primaryKey().notNull(),
   name: varchar('name', { length: 100 }).notNull(),
   code: varchar('code', { length: 10 }).notNull(),
-  phoneCode: varchar('phone_code', { length: 10 }).notNull(),
-  currencyId: integer('currency_id')
+  phone_code: varchar('phone_code', { length: 10 }).notNull(),
+  currency_id: integer('currency_id')
     .references(() => currencies.id)
     .notNull(),
-  createdAt: timestamp('created_at')
+  created_at: timestamp('created_at')
     .notNull()
     .default(sql`now()`),
-  updatedAt: timestamp('updated_at')
+  updated_at: timestamp('updated_at')
     .notNull()
     .default(sql`now()`),
 });

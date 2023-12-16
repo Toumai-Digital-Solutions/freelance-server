@@ -26,7 +26,7 @@ export const userStatus = pgEnum('user_status', [
   'deleted',
 ]);
 
-export const employeesNumber = pgEnum('employees_number', [
+export const employees_number = pgEnum('employees_number', [
   '1-10',
   '10-50',
   '50-200',
