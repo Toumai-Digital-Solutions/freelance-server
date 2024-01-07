@@ -7,6 +7,7 @@ import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
 import { EntreprisesModule } from './libs/features/entreprises/entreprises.module';
 import { JobsModule } from './libs/features/jobs/jobs.module';
+import { PublicModule } from './libs/features/public/public.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { JobsModule } from './libs/features/jobs/jobs.module';
     DBModule,
     EntreprisesModule,
     JobsModule,
+    PublicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

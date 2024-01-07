@@ -1,20 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateJobDto } from './dto/create-job.dto';
-import { UpdateJobDto } from './dto/update-job.dto';
+import { and, desc, eq, getTableColumns, ilike, or, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { DB } from 'src/variables';
-import jobs from 'src/db/schema/job';
-import { and, desc, eq, getTableColumns, ilike, or } from 'drizzle-orm';
-import { SearchJobDto } from './dto/search-job.dto';
-import entreprises from 'src/db/schema/entreprises';
-import users from 'src/db/schema/users';
 import cities from 'src/db/schema/cities';
 import countries from 'src/db/schema/countries';
-import jobTypes from 'src/db/schema/job_type';
 import currencies from 'src/db/schema/currencies';
-import { objArray } from 'src/utils/dbUtils';
-import specializations from 'src/db/schema/specialization';
+import entreprises from 'src/db/schema/entreprises';
+import jobs from 'src/db/schema/job';
 import jobToSpecializations from 'src/db/schema/job_to_specializations';
+import jobTypes from 'src/db/schema/job_type';
+import specializations from 'src/db/schema/specialization';
+import users from 'src/db/schema/users';
+import { objArray } from 'src/utils/dbUtils';
+import { DB } from 'src/variables';
+import { CreateJobDto } from './dto/create-job.dto';
+import { SearchJobDto, SearchJobDtov2 } from './dto/search-job.dto';
+import { UpdateJobDto } from './dto/update-job.dto';
 
 @Injectable()
 export class JobsService {
@@ -28,12 +28,62 @@ export class JobsService {
   }
   async findAllBySearch(params: SearchJobDto) {
     console.log('params', params);
-    const { q, limit = 20, orderBy = 'id', order = 'asc', offset } = params;
+    const { q, limit = 20, orderBy = 'id', order = 'desc', offset } = params;
     const orderBySql = order === 'desc' ? desc(jobs[orderBy]) : jobs[orderBy];
 
     const query = q ? or(ilike(jobs.title, `%${q}%`)) : undefined;
 
     const where = and(query);
+    const data = await this.db
+      .select({
+        ...getTableColumns(jobs),
+        entreprise: {
+          id: entreprises.id,
+          user_id: entreprises.user_id,
+          name: entreprises.name,
+          logo: entreprises.logo,
+        },
+        user: {
+          id: users.id,
+          email: users.email,
+          first_name: users.first_name,
+          last_name: users.last_name,
+          avatar: users.avatar,
+        },
+      })
+      .from(jobs)
+      .where(where)
+      .leftJoin(entreprises, eq(jobs.entreprise_id, entreprises.id))
+      .leftJoin(users, eq(jobs.user_id, users.id))
+      .orderBy(orderBySql)
+      .offset(offset)
+      .limit(limit);
+
+    return {
+      data,
+    };
+  }
+
+  async findAllBySearchV2(params: SearchJobDtov2) {
+    console.log('params', params);
+    const {
+      q,
+      limit = 20,
+      orderBy = 'id',
+      order = 'desc',
+      offset,
+      sectorId,
+    } = params;
+    const orderBySql = order === 'desc' ? desc(jobs[orderBy]) : jobs[orderBy];
+
+    const query = q ? or(ilike(jobs.title, `%${q}%`)) : undefined;
+
+    const where = and(
+      query,
+      sectorId
+        ? sql`EXISTS (SELECT 1 FROM sectors JOIN specializations ON sectors.id = specializations.sector_id JOIN job_to_specializations ON specializations.id = job_to_specializations.specializations_id WHERE sectors.id = ${sectorId} AND jobs.id = job_to_specializations.job_id)`
+        : undefined,
+    );
     const data = await this.db
       .select({
         ...getTableColumns(jobs),

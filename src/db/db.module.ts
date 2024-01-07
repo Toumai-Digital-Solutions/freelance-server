@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
-import * as dotenv from 'dotenv';
 import { ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 export const DB = 'DB';
+@Global()
 @Module({
   providers: [
     {

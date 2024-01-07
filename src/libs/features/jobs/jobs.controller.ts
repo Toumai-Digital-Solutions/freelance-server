@@ -12,7 +12,7 @@ import {
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { SearchJobDto } from './dto/search-job.dto';
+import { SearchJobDto, SearchJobDtov2 } from './dto/search-job.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('jobs')
@@ -32,6 +32,10 @@ export class JobsController {
   @Get('search')
   findAllBySearch(@Query() query: SearchJobDto) {
     return this.jobsService.findAllBySearch(query);
+  }
+  @Get('search/v2')
+  findAllBySearchV2(@Query() query: SearchJobDtov2) {
+    return this.jobsService.findAllBySearchV2(query);
   }
 
   @Get(':id')

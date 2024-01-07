@@ -1,12 +1,12 @@
 import { sql } from 'drizzle-orm';
 import {
   integer,
+  pgTable,
   serial,
   timestamp,
   unique,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 
 import sectors from './sectors';
 
